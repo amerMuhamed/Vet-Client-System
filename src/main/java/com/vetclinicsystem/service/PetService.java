@@ -26,7 +26,8 @@ public class PetService {
     private final ProfileImageService profileImageService;
     private final ProfileImageRepository profileImageRepository;
     private final OwnerService ownerService;
-private final OwnerRepository ownerRepository;
+    private final OwnerRepository ownerRepository;
+
     public PetDto createPet(PetDto petDto) {
         Owner owner = ownerRepository.findById(petDto.getOwnerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Owner not found with id: " + petDto.getOwnerId()));
@@ -57,7 +58,7 @@ private final OwnerRepository ownerRepository;
 
         Owner owner = ownerRepository.getById(petDto.getOwnerId());
         Pet updatedPet = PetMapper.toEntity(petDto, owner);
-        updatedPet.setId(existingPet.getId()); // حافظ على الـ ID
+        updatedPet.setId(existingPet.getId());
 
         return PetMapper.toDto(petRepository.save(updatedPet));
     }

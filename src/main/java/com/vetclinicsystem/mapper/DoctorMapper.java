@@ -15,7 +15,9 @@ public class DoctorMapper {
                 .profileImageUrl(
                         doctor.getProfileImage() != null ? doctor.getProfileImage().getProfileImageUrl() : null
                 )
-                .clinicId(doctor.getClinic().getId())
+                .clinicId(
+                        doctor.getClinic() != null ? doctor.getClinic().getId() : null
+                )
                 .build();
     }
 

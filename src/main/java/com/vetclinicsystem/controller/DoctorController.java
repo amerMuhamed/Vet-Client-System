@@ -52,4 +52,9 @@ public class DoctorController {
         doctorService.deleteProfileImage(doctorId);
         return ResponseEntity.ok(ApiResponse.success(null, "Profile image deleted successfully"));
     }
+    @GetMapping("/{doctorId}")
+    public ResponseEntity<ApiResponse<DoctorDto>> getDoctorById(@PathVariable Long doctorId) {
+        DoctorDto doctor = doctorService.getDoctorDtoById(doctorId);
+        return ResponseEntity.ok(ApiResponse.success(doctor, "Doctor retrieved successfully"));
+    }
 }

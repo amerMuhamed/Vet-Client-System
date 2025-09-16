@@ -47,7 +47,7 @@ public class StartupApp implements CommandLineRunner {
         seedOwners();
         seedPets();
         seedVisits();
-        log.info("✅ Data seeding finished.");
+        log.info("Data seeding finished.");
     }
 
     private void seedClinics() {
@@ -81,7 +81,7 @@ public class StartupApp implements CommandLineRunner {
 
                 clinicRepository.save(c1);
                 clinicRepository.save(c2);
-                log.info("✅ Clinics seeded");
+                log.info("Clinics seeded");
             } else {
                 log.info("Clinics already exist — skipping");
             }
@@ -115,7 +115,7 @@ public class StartupApp implements CommandLineRunner {
 
                 doctorRepository.save(d1);
                 doctorRepository.save(d2);
-                log.info("✅ Doctors seeded");
+                log.info("Doctors seeded");
             } else {
                 log.info("Doctors already exist — skipping");
             }
@@ -147,7 +147,7 @@ public class StartupApp implements CommandLineRunner {
 
                 ownerRepository.save(o1);
                 ownerRepository.save(o2);
-                log.info("✅ Owners seeded");
+                log.info(" Owners seeded");
             } else {
                 log.info("Owners already exist — skipping");
             }
@@ -189,7 +189,7 @@ public class StartupApp implements CommandLineRunner {
 
                 petRepository.save(p1);
                 petRepository.save(p2);
-                log.info("✅ Pets seeded");
+                log.info("Pets seeded");
             } else {
                 log.info("Pets already exist — skipping");
             }
@@ -227,7 +227,7 @@ public class StartupApp implements CommandLineRunner {
 
                     visitRepository.save(v1);
                     visitRepository.save(v2);
-                    log.info("✅ Visits seeded");
+                    log.info("Visits seeded");
                 } else {
                     log.warn("Not enough entities to create visits. Skipping visits seeding.");
                 }

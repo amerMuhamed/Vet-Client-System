@@ -1,5 +1,7 @@
 package  com.vetclinicsystem.service;
+import com.vetclinicsystem.dto.DoctorDto;
 import com.vetclinicsystem.exception.ResourceNotFoundException;
+import com.vetclinicsystem.mapper.DoctorMapper;
 import com.vetclinicsystem.model.Clinic;
 import com.vetclinicsystem.model.Doctor;
 import com.vetclinicsystem.model.ProfileImage;
@@ -32,6 +34,11 @@ public class DoctorService {
                 .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with id: " + id));
     }
 
+    public DoctorDto getDoctorDtoById(Long id) {
+        Doctor doctor = doctorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with id: " + id));
+        return DoctorMapper.toDto(doctor);
+    }
     public Doctor assignDoctorToClinic(Long doctorId, Long clinicId) {
         Doctor doctor = getDoctorById(doctorId);
         Clinic clinic = clinicRepository.findById(clinicId)
@@ -87,4 +94,5 @@ public class DoctorService {
     public List<Doctor> getAllDoctors() {
         return doctorRepository.findAll();
     }
+
 }
