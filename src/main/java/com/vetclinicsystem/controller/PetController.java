@@ -1,9 +1,7 @@
 package com.vetclinicsystem.controller;
-import com.vetclinicsystem.model.Pet;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.vetclinicsystem.dto.ApiResponse;
-import com.vetclinicsystem.model.Pet;
+import com.vetclinicsystem.dto.PetDto;
 import com.vetclinicsystem.service.PetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,26 +19,32 @@ public class PetController {
     private final PetService petService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Pet>> createPet(@RequestBody Pet pet) {
-        Pet savedPet = petService.createPet(pet);
+    public ResponseEntity<ApiResponse<PetDto>> createPet(@RequestBody PetDto petDto) {
+        PetDto savedPet = petService.createPet(petDto);
         return ResponseEntity.ok(ApiResponse.success(savedPet, "Pet created successfully"));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Pet>> getPet(@PathVariable Long id) {
-        Pet pet = petService.getPetById(id);
+    public ResponseEntity<ApiResponse<PetDto>> getPet(@PathVariable Long id) {
+        PetDto pet = petService.getPetById(id);
         return ResponseEntity.ok(ApiResponse.success(pet, "Pet retrieved successfully"));
     }
 
     @GetMapping("/owner/{ownerId}")
-    public ResponseEntity<ApiResponse<List<Pet>>> getPetsByOwner(@PathVariable Long ownerId) {
-        List<Pet> pets = petService.getPetsByOwnerId(ownerId);
+    public ResponseEntity<ApiResponse<List<PetDto>>> getPetsByOwner(@PathVariable Long ownerId) {
+        List<PetDto> pets = petService.getPetsByOwnerId(ownerId);
         return ResponseEntity.ok(ApiResponse.success(pets, "Owner's pets retrieved successfully"));
     }
 
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<PetDto>>> getAllPets() {
+        List<PetDto> pets = petService.getAllPets();
+        return ResponseEntity.ok(ApiResponse.success(pets, "All pets retrieved successfully"));
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Pet>> updatePet(@PathVariable Long id, @RequestBody Pet pet) {
-        Pet updatedPet = petService.updatePet(id, pet);
+    public ResponseEntity<ApiResponse<PetDto>> updatePet(@PathVariable Long id, @RequestBody PetDto petDto) {
+        PetDto updatedPet = petService.updatePet(id, petDto);
         return ResponseEntity.ok(ApiResponse.success(updatedPet, "Pet updated successfully"));
     }
 
@@ -51,11 +55,11 @@ public class PetController {
     }
 
     @PostMapping("/{petId}/photos")
-    public ResponseEntity<ApiResponse<Pet>> uploadPetPhoto(
+    public ResponseEntity<ApiResponse<PetDto>> uploadPetPhoto(
             @PathVariable Long petId,
             @RequestParam("file") MultipartFile file
     ) throws IOException {
-        Pet pet = petService.addPetImage(petId, file);
+        PetDto pet = petService.addPetImage(petId, file);
         return ResponseEntity.ok(ApiResponse.success(pet, "Pet photo uploaded successfully"));
     }
 }

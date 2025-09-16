@@ -1,6 +1,10 @@
 package com.vetclinicsystem.service;
 
+import com.vetclinicsystem.dto.ClinicDto;
+import com.vetclinicsystem.dto.DoctorDto;
 import com.vetclinicsystem.exception.ResourceNotFoundException;
+import com.vetclinicsystem.mapper.ClinicMapper;
+import com.vetclinicsystem.mapper.DoctorMapper;
 import com.vetclinicsystem.model.Clinic;
 import com.vetclinicsystem.model.Doctor;
 import com.vetclinicsystem.repository.ClinicRepository;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,39 +22,57 @@ public class ClinicService {
     private final ClinicRepository clinicRepository;
     private final DoctorRepository doctorRepository;
 
-    public Clinic createClinic(Clinic clinic) {
-        return clinicRepository.save(clinic);
+    public ClinicDto saveClinic(ClinicDto clinicDto) {
+        Clinic clinic = ClinicMapper.toEntity(clinicDto);
+        Clinic saved = clinicRepository.save(clinic);
+        return ClinicMapper.toDto(saved);
     }
 
-    public Clinic getClinicById(Long id) {
-        return clinicRepository.findById(id)
+    public ClinicDto getClinicById(Long id) {
+        Clinic clinic = clinicRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Clinic not found with id: " + id));
+        return ClinicMapper.toDto(clinic);
     }
 
-    public List<Doctor> getDoctorsByClinicId(Long clinicId) {
+    public List<DoctorDto> getDoctorsByClinicId(Long clinicId) {
         if (!clinicRepository.existsById(clinicId)) {
             throw new ResourceNotFoundException("Clinic not found with id: " + clinicId);
         }
-        return doctorRepository.findByClinicId(clinicId);
+        List<Doctor> doctors = doctorRepository.findByClinicId(clinicId);
+        return doctors.stream()
+                .map(DoctorMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Clinic> searchByPhone(String phone) {
-        return clinicRepository.findByPhone(phone);
+    public List<ClinicDto> searchByPhone(String phone) {
+        return clinicRepository.findByPhone(phone).stream()
+                .map(ClinicMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Clinic> searchByAddress(String address) {
-        return clinicRepository.findByAddressContainingIgnoreCase(address);
+    public List<ClinicDto> searchByAddress(String address) {
+        return clinicRepository.findByAddressContainingIgnoreCase(address).stream()
+                .map(ClinicMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Clinic> searchClinics(String phone, String address) {
+    public List<ClinicDto> searchClinics(String phone, String address) {
+        List<Clinic> clinics;
         if (phone != null && !phone.isEmpty() && address != null && !address.isEmpty()) {
-            return clinicRepository.findByPhoneAndAddressContainingIgnoreCase(phone, address);
+            clinics = clinicRepository.findByPhoneAndAddressContainingIgnoreCase(phone, address);
         } else if (phone != null && !phone.isEmpty()) {
-            return searchByPhone(phone);
+            clinics = clinicRepository.findByPhone(phone);
         } else if (address != null && !address.isEmpty()) {
-            return searchByAddress(address);
+            clinics = clinicRepository.findByAddressContainingIgnoreCase(address);
         } else {
-            return new ArrayList<>();
+            clinics = new ArrayList<>();
         }
+        return clinics.stream().map(ClinicMapper::toDto).collect(Collectors.toList());
+    }
+
+    public List<ClinicDto> getAllClinics() {
+        return clinicRepository.findAll().stream()
+                .map(ClinicMapper::toDto)
+                .collect(Collectors.toList());
     }
 }
